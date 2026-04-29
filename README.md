@@ -63,3 +63,5 @@ app/src/main/java/com/FMDAP/pulsepoint/
 ├── MainActivity.kt
 └── PulsePointApp.kt
 ```
+## License
+GNU General Public License v3 (GPLv3)
