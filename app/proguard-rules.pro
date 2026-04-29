@@ -1,0 +1,6 @@
+-keep class com.FMDAP.pulsepoint.data.model.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
+-dontwarn com.google.gson.**

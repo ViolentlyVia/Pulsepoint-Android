@@ -1,0 +1,20 @@
+# Built artifacts
+build/
+app/build/
+
+# Gradle
+.gradle/
+*.gradle.kts.dsl.cache
+
+# Local config (machine-specific, never commit)
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
