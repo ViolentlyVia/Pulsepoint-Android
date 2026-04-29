@@ -9,6 +9,10 @@ app/build/
 # Local config (machine-specific, never commit)
 local.properties
 
+# Release signing keystore (keep a backup — never commit)
+*.jks
+*.keystore
+
 # IDE
 .idea/
 *.iml
