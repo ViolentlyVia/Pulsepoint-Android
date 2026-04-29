@@ -3,7 +3,17 @@
     "allow": [
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(grep -v \"Text\\\\|Icon\\\\|@\\\\|//\")",
+      "Bash(tasklist)",
+      "Bash(./gradlew --stop)",
+      "Bash(./gradlew assembleRelease --no-daemon)",
+      "Bash(gh release create v0.1.0 'app/build/outputs/apk/release/app-release.apk#PulsePoint-v0.1.0.apk' --title v0.1.0 --notes ' *)",
+      "PowerShell($env:GITHUB_TOKEN; $env:GH_TOKEN; [System.Environment]::GetEnvironmentVariable\\(\"GITHUB_TOKEN\", \"User\"\\); [System.Environment]::GetEnvironmentVariable\\(\"GH_TOKEN\", \"User\"\\))",
+      "PowerShell(winget --version 2>$null)",
+      "PowerShell(winget install --id GitHub.cli --silent --accept-package-agreements --accept-source-agreements 2>&1)",
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\); gh --version)",
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\); Set-Location \"c:\\\\Users\\\\Via\\\\OneDrive\\\\CodingFiles\\\\GitHub\\\\Pulsepoint - Android\"; gh auth status 2>&1)"
     ]
   }
 }
