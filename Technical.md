@@ -98,10 +98,13 @@ Integration credentials (Unraid host/API key, iDRAC host/username/password, Omad
 - **Charts**: Integration of a charting library (e.g., Vico) to visualize uptime history on the Host Detail screen.
 
 ## Build Requirements
+
+- **Version**: 0.1.0 (versionCode 3)
 - **Kotlin**: 1.9.0+
 - **Compose Compiler**: Compatible with the chosen Kotlin version.
 - **Minimum SDK**: 26 (Android 8.0).
 - **Target SDK**: 35 (Android 15).
+- **Signing**: Keystore credentials are read from `local.properties` (never committed). Required keys: `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
 
 ---
 *This documentation is maintained by the PulsePoint Android development team.*

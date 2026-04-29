@@ -1,6 +1,8 @@
 # PulsePoint — Android
 
-An Android companion app for a self-hosted [PulsePoint](https://github.com/ViolentlyVia) monitoring server. View the live status of your hosts and services, ping machines, and manage assets — all from your phone.
+> **v0.1.0**
+
+An Android companion app for a self-hosted [PulsePoint](https://github.com/ViolentlyVia) monitoring server. View the live status of your hosts and services, ping machines, manage assets, and monitor hardware integrations — all from your phone.
 
 ## Features
 
@@ -8,7 +10,11 @@ An Android companion app for a self-hosted [PulsePoint](https://github.com/Viole
 - **Hosts** — browse all monitored hosts with live status badges
 - **Host detail** — view host metadata and run a live ping
 - **Services** — see the status of every monitored service endpoint
-- **Management console** — add/delete services and rename, reorder, or remove assets
+- **Integrations** — dedicated screens for Unraid, iDRAC, and Omada SDN
+  - **Unraid** — array state, disk details, Docker container controls, VM controls, and share utilization
+  - **iDRAC** — system info, thermal sensors, fan RPMs, PSU status, and storage drives
+  - **Omada SDN** — multi-site support, device status, and connected client details
+- **Management console** — add/delete services, rename/reorder/remove assets, and configure integration credentials
 - **Settings** — configure the server URL, API key, and optional management password (auto-fills the login screen)
 - Pull-to-refresh on all data screens
 
