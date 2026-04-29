@@ -1,6 +1,14 @@
 package com.FMDAP.pulsepoint.data.api
 
 import com.FMDAP.pulsepoint.data.model.*
+import com.FMDAP.pulsepoint.data.model.UnraidSnapshot
+import com.FMDAP.pulsepoint.data.model.IdracSnapshot
+import com.FMDAP.pulsepoint.data.model.OmadaSnapshot
+import com.FMDAP.pulsepoint.data.model.OmadaSettings
+import com.FMDAP.pulsepoint.data.model.IntegrationsResponse
+import com.FMDAP.pulsepoint.data.model.UpdateUnraidRequest
+import com.FMDAP.pulsepoint.data.model.UpdateIdracRequest
+import com.FMDAP.pulsepoint.data.model.UpdateOmadaRequest
 import retrofit2.http.*
 
 interface PulsePointApi {
@@ -43,6 +51,50 @@ interface PulsePointApi {
     @GET("api/version")
     suspend fun getVersion(): VersionInfo
 
+    // --- Integration routes (require X-Api-Key) ---
+
+    @GET("api/unraid")
+    suspend fun getUnraid(): UnraidSnapshot
+
+    @GET("api/unraid/refresh")
+    suspend fun refreshUnraid(): UnraidSnapshot
+
+    @POST("api/unraid/docker/{id}/start")
+    suspend fun startContainer(@Path("id") id: String): OkResponse
+
+    @POST("api/unraid/docker/{id}/stop")
+    suspend fun stopContainer(@Path("id") id: String): OkResponse
+
+    @POST("api/unraid/docker/{id}/restart")
+    suspend fun restartContainer(@Path("id") id: String): OkResponse
+
+    @POST("api/unraid/vm/{name}/start")
+    suspend fun startVm(@Path("name") name: String): OkResponse
+
+    @POST("api/unraid/vm/{name}/stop")
+    suspend fun stopVm(@Path("name") name: String): OkResponse
+
+    @POST("api/unraid/vm/{name}/restart")
+    suspend fun restartVm(@Path("name") name: String): OkResponse
+
+    @GET("api/idrac")
+    suspend fun getIdrac(): IdracSnapshot
+
+    @GET("api/idrac/refresh")
+    suspend fun refreshIdrac(): IdracSnapshot
+
+    @GET("api/omada")
+    suspend fun getOmada(): OmadaSnapshot
+
+    @GET("api/omada/refresh")
+    suspend fun refreshOmada(): OmadaSnapshot
+
+    @GET("api/omada/site/{siteId}")
+    suspend fun getOmadaSite(@Path("siteId") siteId: String): OmadaSnapshot
+
+    @PUT("api/omada/preferred-site/{siteId}")
+    suspend fun setPreferredSite(@Path("siteId") siteId: String): OkResponse
+
     // --- Management routes (require pp_session cookie) ---
 
     @GET("api/manage/services")
@@ -62,4 +114,19 @@ interface PulsePointApi {
 
     @GET("api/manage/assets")
     suspend fun getManageAssets(): List<Host>
+
+    @GET("api/manage/integrations")
+    suspend fun getIntegrations(): IntegrationsResponse
+
+    @PUT("api/manage/integrations/unraid")
+    suspend fun updateUnraid(@Body body: UpdateUnraidRequest): OkResponse
+
+    @PUT("api/manage/integrations/idrac")
+    suspend fun updateIdrac(@Body body: UpdateIdracRequest): OkResponse
+
+    @GET("api/manage/integrations/omada")
+    suspend fun getOmadaSettings(): OmadaSettings
+
+    @PUT("api/manage/integrations/omada")
+    suspend fun updateOmada(@Body body: UpdateOmadaRequest): OkResponse
 }

@@ -19,6 +19,7 @@ import com.FMDAP.pulsepoint.viewmodel.ManageViewModel
 fun ManageServicesScreen(
     vm: ManageViewModel,
     onNavigateAssets: () -> Unit,
+    onNavigateIntegrations: () -> Unit,
     onBack: () -> Unit
 ) {
     val state by vm.servicesState.collectAsState()
@@ -36,6 +37,9 @@ fun ManageServicesScreen(
                 actions = {
                     IconButton(onClick = onNavigateAssets) {
                         Icon(Icons.Default.Computer, "Manage Hosts")
+                    }
+                    IconButton(onClick = onNavigateIntegrations) {
+                        Icon(Icons.Default.Hub, "Integration Settings")
                     }
                     IconButton(onClick = vm::logout) {
                         Icon(Icons.Default.Logout, "Logout")

@@ -52,6 +52,26 @@ class PulsePointRepository(private val prefs: AppPreferences) {
     suspend fun moveHostDown(hostname: String) =
         requireConfig().mapCatching { it.api.moveHostDown(hostname) }
 
+    // Unraid
+    suspend fun getUnraid() = requireConfig().mapCatching { it.api.getUnraid() }
+    suspend fun refreshUnraid() = requireConfig().mapCatching { it.api.refreshUnraid() }
+    suspend fun startContainer(id: String) = requireConfig().mapCatching { it.api.startContainer(id) }
+    suspend fun stopContainer(id: String) = requireConfig().mapCatching { it.api.stopContainer(id) }
+    suspend fun restartContainer(id: String) = requireConfig().mapCatching { it.api.restartContainer(id) }
+    suspend fun startVm(name: String) = requireConfig().mapCatching { it.api.startVm(name) }
+    suspend fun stopVm(name: String) = requireConfig().mapCatching { it.api.stopVm(name) }
+    suspend fun restartVm(name: String) = requireConfig().mapCatching { it.api.restartVm(name) }
+
+    // iDRAC
+    suspend fun getIdrac() = requireConfig().mapCatching { it.api.getIdrac() }
+    suspend fun refreshIdrac() = requireConfig().mapCatching { it.api.refreshIdrac() }
+
+    // Omada
+    suspend fun getOmada() = requireConfig().mapCatching { it.api.getOmada() }
+    suspend fun refreshOmada() = requireConfig().mapCatching { it.api.refreshOmada() }
+    suspend fun getOmadaSite(siteId: String) = requireConfig().mapCatching { it.api.getOmadaSite(siteId) }
+    suspend fun setPreferredSite(siteId: String) = requireConfig().mapCatching { it.api.setPreferredSite(siteId) }
+
     // Management
     suspend fun login(password: String): Result<Unit> {
         val url = prefs.serverUrl.first()
@@ -70,4 +90,14 @@ class PulsePointRepository(private val prefs: AppPreferences) {
     suspend fun getManageAssets() = requireConfig().mapCatching { it.api.getManageAssets() }
     suspend fun renameAsset(hostname: String, name: String) =
         requireConfig().mapCatching { it.api.renameAsset(hostname, RenameRequest(name)) }
+
+    // Integration settings
+    suspend fun getIntegrations() = requireConfig().mapCatching { it.api.getIntegrations() }
+    suspend fun updateUnraid(host: String, apiKey: String, apiKeyId: String, bearerToken: String) =
+        requireConfig().mapCatching { it.api.updateUnraid(UpdateUnraidRequest(host, apiKey, apiKeyId, bearerToken)) }
+    suspend fun updateIdrac(host: String, username: String, password: String) =
+        requireConfig().mapCatching { it.api.updateIdrac(UpdateIdracRequest(host, username, password)) }
+    suspend fun getOmadaSettings() = requireConfig().mapCatching { it.api.getOmadaSettings() }
+    suspend fun updateOmada(baseUrl: String, omadacId: String, clientId: String, clientSecret: String, preferSiteId: String) =
+        requireConfig().mapCatching { it.api.updateOmada(UpdateOmadaRequest(baseUrl, omadacId, clientId, clientSecret, preferSiteId)) }
 }

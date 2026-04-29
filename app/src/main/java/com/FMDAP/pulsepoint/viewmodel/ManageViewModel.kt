@@ -5,9 +5,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.FMDAP.pulsepoint.PulsePointApp
-import com.FMDAP.pulsepoint.data.model.Host
-import com.FMDAP.pulsepoint.data.model.ServiceEntry
-import com.FMDAP.pulsepoint.data.model.UiState
+import com.FMDAP.pulsepoint.data.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,8 +22,18 @@ class ManageViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _servicesState = MutableStateFlow(UiState<List<ServiceEntry>>(isLoading = false))
     private val _assetsState   = MutableStateFlow(UiState<List<Host>>(isLoading = false))
+    private val _integrationsState = MutableStateFlow(UiState<IntegrationsResponse>(isLoading = false))
+    private val _omadaSettingsState = MutableStateFlow(UiState<OmadaSettings>(isLoading = false))
+
     val servicesState = _servicesState.asStateFlow()
     val assetsState   = _assetsState.asStateFlow()
+    val integrationsState = _integrationsState.asStateFlow()
+    val omadaSettingsState = _omadaSettingsState.asStateFlow()
+
+    var integrationSaveError by mutableStateOf<String?>(null)
+        private set
+    var integrationSaveSuccess by mutableStateOf(false)
+        private set
 
     fun login(password: String) {
         viewModelScope.launch {
@@ -81,5 +89,62 @@ class ManageViewModel(app: Application) : AndroidViewModel(app) {
 
     fun renameAsset(hostname: String, name: String) {
         viewModelScope.launch { repo.renameAsset(hostname, name); loadAssets() }
+    }
+
+    fun loadIntegrations() {
+        viewModelScope.launch {
+            _integrationsState.value = UiState(isLoading = true)
+            val result = repo.getIntegrations()
+            _integrationsState.value = result.fold(
+                onSuccess = { UiState(data = it, isLoading = false) },
+                onFailure = { UiState(error = it.message, isLoading = false) }
+            )
+        }
+        viewModelScope.launch {
+            _omadaSettingsState.value = UiState(isLoading = true)
+            val result = repo.getOmadaSettings()
+            _omadaSettingsState.value = result.fold(
+                onSuccess = { UiState(data = it, isLoading = false) },
+                onFailure = { UiState(error = it.message, isLoading = false) }
+            )
+        }
+    }
+
+    fun saveUnraid(host: String, apiKey: String, apiKeyId: String, bearerToken: String) {
+        viewModelScope.launch {
+            integrationSaveError = null
+            integrationSaveSuccess = false
+            repo.updateUnraid(host, apiKey, apiKeyId, bearerToken).fold(
+                onSuccess = { integrationSaveSuccess = true },
+                onFailure = { integrationSaveError = it.message }
+            )
+        }
+    }
+
+    fun saveIdrac(host: String, username: String, password: String) {
+        viewModelScope.launch {
+            integrationSaveError = null
+            integrationSaveSuccess = false
+            repo.updateIdrac(host, username, password).fold(
+                onSuccess = { integrationSaveSuccess = true },
+                onFailure = { integrationSaveError = it.message }
+            )
+        }
+    }
+
+    fun saveOmada(baseUrl: String, omadacId: String, clientId: String, clientSecret: String, preferSiteId: String) {
+        viewModelScope.launch {
+            integrationSaveError = null
+            integrationSaveSuccess = false
+            repo.updateOmada(baseUrl, omadacId, clientId, clientSecret, preferSiteId).fold(
+                onSuccess = { integrationSaveSuccess = true },
+                onFailure = { integrationSaveError = it.message }
+            )
+        }
+    }
+
+    fun clearIntegrationStatus() {
+        integrationSaveError = null
+        integrationSaveSuccess = false
     }
 }

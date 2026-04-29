@@ -8,18 +8,28 @@ android {
     namespace = "com.FMDAP.pulsepoint"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("pulsepoint-release.jks")
+            storePassword = "Rjqwkr123!"
+            keyAlias = "pulsepoint"
+            keyPassword = "Rjqwkr123!"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.FMDAP.pulsepoint"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.0.1"
+        versionCode = 2
+        versionName = "0.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

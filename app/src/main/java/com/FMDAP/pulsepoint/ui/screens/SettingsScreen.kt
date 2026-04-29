@@ -120,8 +120,6 @@ fun SettingsScreen(onNavigateToManage: () -> Unit, vm: SettingsViewModel = viewM
                             InfoRow2("Server Version", v.version)
                             InfoRow2(".NET Version",   v.dotnet)
                             InfoRow2("PID",            v.pid.toString())
-                            val upH = v.uptimeS / 3600; val upM = (v.uptimeS % 3600) / 60
-                            InfoRow2("Server Uptime",  "${upH}h ${upM}m")
                         }
                     }
                 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -34,7 +35,7 @@ fun NavGraph() {
                                 }
                             },
                             icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label) }
+                            label = { Text(item.label, fontSize = 9.sp, maxLines = 1) }
                         )
                     }
                 }
@@ -59,6 +60,22 @@ fun NavGraph() {
             composable(Screen.Services.route) {
                 ServicesScreen()
             }
+            composable(Screen.Integrations.route) {
+                IntegrationsScreen(
+                    onNavigateUnraid = { navController.navigate(Screen.Unraid.route) },
+                    onNavigateIdrac  = { navController.navigate(Screen.Idrac.route) },
+                    onNavigateOmada  = { navController.navigate(Screen.Omada.route) }
+                )
+            }
+            composable(Screen.Unraid.route) {
+                UnraidScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.Idrac.route) {
+                IdracScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.Omada.route) {
+                OmadaScreen(onBack = { navController.popBackStack() })
+            }
             composable(Screen.Settings.route) {
                 SettingsScreen(
                     onNavigateToManage = { navController.navigate(Screen.ManageLogin.route) }
@@ -79,11 +96,18 @@ fun NavGraph() {
                 ManageServicesScreen(
                     vm = manageVm,
                     onNavigateAssets = { navController.navigate(Screen.ManageAssets.route) },
+                    onNavigateIntegrations = { navController.navigate(Screen.ManageIntegrations.route) },
                     onBack = { navController.popBackStack() }
                 )
             }
             composable(Screen.ManageAssets.route) {
                 ManageAssetsScreen(
+                    vm = manageVm,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.ManageIntegrations.route) {
+                ManageIntegrationsScreen(
                     vm = manageVm,
                     onBack = { navController.popBackStack() }
                 )
