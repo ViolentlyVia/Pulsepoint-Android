@@ -24,15 +24,23 @@ class ManageViewModel(app: Application) : AndroidViewModel(app) {
     private val _assetsState   = MutableStateFlow(UiState<List<Host>>(isLoading = false))
     private val _integrationsState = MutableStateFlow(UiState<IntegrationsResponse>(isLoading = false))
     private val _omadaSettingsState = MutableStateFlow(UiState<OmadaSettings>(isLoading = false))
+    private val _growSettingsState = MutableStateFlow(UiState<GrowSettings>(isLoading = false))
+    private val _appearanceState = MutableStateFlow(UiState<AppearanceSettings>(isLoading = false))
 
     val servicesState = _servicesState.asStateFlow()
     val assetsState   = _assetsState.asStateFlow()
     val integrationsState = _integrationsState.asStateFlow()
     val omadaSettingsState = _omadaSettingsState.asStateFlow()
+    val growSettingsState = _growSettingsState.asStateFlow()
+    val appearanceState = _appearanceState.asStateFlow()
 
     var integrationSaveError by mutableStateOf<String?>(null)
         private set
     var integrationSaveSuccess by mutableStateOf(false)
+        private set
+    var appearanceSaveError by mutableStateOf<String?>(null)
+        private set
+    var appearanceSaveSuccess by mutableStateOf(false)
         private set
 
     fun login(password: String) {
@@ -108,6 +116,14 @@ class ManageViewModel(app: Application) : AndroidViewModel(app) {
                 onFailure = { UiState(error = it.message, isLoading = false) }
             )
         }
+        viewModelScope.launch {
+            _growSettingsState.value = UiState(isLoading = true)
+            val result = repo.getGrowSettings()
+            _growSettingsState.value = result.fold(
+                onSuccess = { UiState(data = it, isLoading = false) },
+                onFailure = { UiState(error = it.message, isLoading = false) }
+            )
+        }
     }
 
     fun saveUnraid(host: String, apiKey: String, apiKeyId: String, bearerToken: String) {
@@ -143,8 +159,49 @@ class ManageViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun saveGrow(url: String, rtspUrl: String, hlsUrl: String) {
+        viewModelScope.launch {
+            integrationSaveError = null
+            integrationSaveSuccess = false
+            repo.updateGrow(url, rtspUrl, hlsUrl).fold(
+                onSuccess = { integrationSaveSuccess = true },
+                onFailure = { integrationSaveError = it.message }
+            )
+        }
+    }
+
+    fun loadAppearance() {
+        viewModelScope.launch {
+            _appearanceState.value = UiState(isLoading = true)
+            val result = repo.getAppearance()
+            _appearanceState.value = result.fold(
+                onSuccess = { UiState(data = it, isLoading = false) },
+                onFailure = { UiState(error = it.message, isLoading = false) }
+            )
+        }
+    }
+
+    fun saveAppearance(
+        accentColor: String, siteName: String, navHidden: String, cardColumns: String,
+        hiddenMetrics: String, refreshInterval: Int, onlineThreshold: Int, hideServicesWidget: Boolean
+    ) {
+        viewModelScope.launch {
+            appearanceSaveError = null
+            appearanceSaveSuccess = false
+            repo.updateAppearance(accentColor, siteName, navHidden, cardColumns, hiddenMetrics, refreshInterval, onlineThreshold, hideServicesWidget).fold(
+                onSuccess = { appearanceSaveSuccess = true },
+                onFailure = { appearanceSaveError = it.message }
+            )
+        }
+    }
+
     fun clearIntegrationStatus() {
         integrationSaveError = null
         integrationSaveSuccess = false
+    }
+
+    fun clearAppearanceStatus() {
+        appearanceSaveError = null
+        appearanceSaveSuccess = false
     }
 }

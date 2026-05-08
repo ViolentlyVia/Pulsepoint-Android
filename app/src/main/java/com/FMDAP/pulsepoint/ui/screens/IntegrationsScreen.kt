@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 fun IntegrationsScreen(
     onNavigateUnraid: () -> Unit,
     onNavigateIdrac: () -> Unit,
-    onNavigateOmada: () -> Unit
+    onNavigateOmada: () -> Unit,
+    onNavigateGrow: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -52,6 +53,14 @@ fun IntegrationsScreen(
                     title = "Omada SDN",
                     subtitle = "TP-Link Omada sites, devices, and connected clients",
                     onClick = onNavigateOmada
+                )
+            }
+            item {
+                IntegrationTile(
+                    icon = Icons.Default.Spa,
+                    title = "Grow",
+                    subtitle = "Soil moisture, temperature, humidity, pump controls, and camera stream",
+                    onClick = onNavigateGrow
                 )
             }
         }

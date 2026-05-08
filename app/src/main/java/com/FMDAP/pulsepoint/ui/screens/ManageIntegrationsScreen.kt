@@ -23,6 +23,7 @@ import com.FMDAP.pulsepoint.viewmodel.ManageViewModel
 fun ManageIntegrationsScreen(vm: ManageViewModel, onBack: () -> Unit) {
     val intState    by vm.integrationsState.collectAsState()
     val omadaState  by vm.omadaSettingsState.collectAsState()
+    val growState   by vm.growSettingsState.collectAsState()
 
     LaunchedEffect(Unit) { vm.loadIntegrations() }
 
@@ -46,6 +47,11 @@ fun ManageIntegrationsScreen(vm: ManageViewModel, onBack: () -> Unit) {
     var omadaSecretVisible by remember { mutableStateOf(false) }
     var omadaSiteId       by remember { mutableStateOf("") }
 
+    // Grow form state
+    var growUrl     by remember { mutableStateOf("") }
+    var growRtspUrl by remember { mutableStateOf("") }
+    var growHlsUrl  by remember { mutableStateOf("") }
+
     // Populate fields once data loads
     LaunchedEffect(intState.data) {
         intState.data?.let { d ->
@@ -63,6 +69,13 @@ fun ManageIntegrationsScreen(vm: ManageViewModel, onBack: () -> Unit) {
             omadaOmadacId = d.omadacId
             omadaClientId = d.clientId
             omadaSiteId   = d.preferSiteId
+        }
+    }
+    LaunchedEffect(growState.data) {
+        growState.data?.let { d ->
+            growUrl     = d.url
+            growRtspUrl = d.rtspUrl
+            growHlsUrl  = d.hlsUrl
         }
     }
 
@@ -195,6 +208,28 @@ fun ManageIntegrationsScreen(vm: ManageViewModel, onBack: () -> Unit) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) { Text("Save Omada") }
+
+            HorizontalDivider()
+
+            // --- Grow ---
+            SectionHeader("Grow Device")
+            OutlinedTextField(value = growUrl, onValueChange = { growUrl = it },
+                label = { Text("Device URL (e.g. http://192.168.1.x)") },
+                modifier = Modifier.fillMaxWidth(), singleLine = true)
+            OutlinedTextField(value = growRtspUrl, onValueChange = { growRtspUrl = it },
+                label = { Text("RTSP Stream URL (optional)") },
+                modifier = Modifier.fillMaxWidth(), singleLine = true)
+            OutlinedTextField(value = growHlsUrl, onValueChange = { growHlsUrl = it },
+                label = { Text("HLS Stream URL (optional)") },
+                modifier = Modifier.fillMaxWidth(), singleLine = true,
+                supportingText = { Text("If blank, auto-derived from RTSP URL") })
+            Button(
+                onClick = {
+                    vm.clearIntegrationStatus()
+                    vm.saveGrow(growUrl, growRtspUrl, growHlsUrl)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("Save Grow") }
 
             Spacer(Modifier.height(16.dp))
         }

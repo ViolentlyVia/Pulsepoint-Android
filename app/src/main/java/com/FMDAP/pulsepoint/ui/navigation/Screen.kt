@@ -16,10 +16,12 @@ sealed class Screen(val route: String) {
     data object Unraid              : Screen("unraid")
     data object Idrac               : Screen("idrac")
     data object Omada               : Screen("omada")
+    data object Grow                : Screen("grow")
     data object ManageLogin         : Screen("manage_login")
     data object ManageServices      : Screen("manage_services")
     data object ManageAssets        : Screen("manage_assets")
     data object ManageIntegrations  : Screen("manage_integrations")
+    data object ManageAppearance    : Screen("manage_appearance")
 }
 
 data class BottomNavItem(val screen: Screen, val label: String, val icon: ImageVector)

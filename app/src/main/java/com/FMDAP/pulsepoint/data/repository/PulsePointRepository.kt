@@ -100,4 +100,20 @@ class PulsePointRepository(private val prefs: AppPreferences) {
     suspend fun getOmadaSettings() = requireConfig().mapCatching { it.api.getOmadaSettings() }
     suspend fun updateOmada(baseUrl: String, omadacId: String, clientId: String, clientSecret: String, preferSiteId: String) =
         requireConfig().mapCatching { it.api.updateOmada(UpdateOmadaRequest(baseUrl, omadacId, clientId, clientSecret, preferSiteId)) }
+    suspend fun getGrowSettings() = requireConfig().mapCatching { it.api.getGrowSettings() }
+    suspend fun updateGrow(url: String, rtspUrl: String, hlsUrl: String) =
+        requireConfig().mapCatching { it.api.updateGrow(UpdateGrowRequest(url, rtspUrl, hlsUrl)) }
+    suspend fun getAppearance() = requireConfig().mapCatching { it.api.getAppearance() }
+    suspend fun updateAppearance(
+        accentColor: String, siteName: String, navHidden: String, cardColumns: String,
+        hiddenMetrics: String, refreshInterval: Int, onlineThreshold: Int, hideServicesWidget: Boolean
+    ) = requireConfig().mapCatching {
+        it.api.updateAppearance(UpdateAppearanceRequest(accentColor, siteName, navHidden, cardColumns, hiddenMetrics, refreshInterval, onlineThreshold, hideServicesWidget))
+    }
+
+    // Grow
+    suspend fun getGrowStatus() = requireConfig().mapCatching { it.api.getGrowStatus() }
+    suspend fun controlGrowPump(action: String) = requireConfig().mapCatching { it.api.controlGrowPump(action) }
+    suspend fun setGrow(threshold: Int, pumpDur: Int) = requireConfig().mapCatching { it.api.setGrow(threshold, pumpDur) }
+    suspend fun clearGrowHistory() = requireConfig().mapCatching { it.api.clearGrowHistory() }
 }

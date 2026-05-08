@@ -64,7 +64,8 @@ fun NavGraph() {
                 IntegrationsScreen(
                     onNavigateUnraid = { navController.navigate(Screen.Unraid.route) },
                     onNavigateIdrac  = { navController.navigate(Screen.Idrac.route) },
-                    onNavigateOmada  = { navController.navigate(Screen.Omada.route) }
+                    onNavigateOmada  = { navController.navigate(Screen.Omada.route) },
+                    onNavigateGrow   = { navController.navigate(Screen.Grow.route) }
                 )
             }
             composable(Screen.Unraid.route) {
@@ -75,6 +76,9 @@ fun NavGraph() {
             }
             composable(Screen.Omada.route) {
                 OmadaScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.Grow.route) {
+                GrowScreen(onBack = { navController.popBackStack() })
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(
@@ -97,6 +101,7 @@ fun NavGraph() {
                     vm = manageVm,
                     onNavigateAssets = { navController.navigate(Screen.ManageAssets.route) },
                     onNavigateIntegrations = { navController.navigate(Screen.ManageIntegrations.route) },
+                    onNavigateAppearance = { navController.navigate(Screen.ManageAppearance.route) },
                     onBack = { navController.popBackStack() }
                 )
             }
@@ -108,6 +113,12 @@ fun NavGraph() {
             }
             composable(Screen.ManageIntegrations.route) {
                 ManageIntegrationsScreen(
+                    vm = manageVm,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.ManageAppearance.route) {
+                ManageAppearanceScreen(
                     vm = manageVm,
                     onBack = { navController.popBackStack() }
                 )

@@ -20,6 +20,7 @@ fun ManageServicesScreen(
     vm: ManageViewModel,
     onNavigateAssets: () -> Unit,
     onNavigateIntegrations: () -> Unit,
+    onNavigateAppearance: () -> Unit,
     onBack: () -> Unit
 ) {
     val state by vm.servicesState.collectAsState()
@@ -40,6 +41,9 @@ fun ManageServicesScreen(
                     }
                     IconButton(onClick = onNavigateIntegrations) {
                         Icon(Icons.Default.Hub, "Integration Settings")
+                    }
+                    IconButton(onClick = onNavigateAppearance) {
+                        Icon(Icons.Default.Palette, "Appearance Settings")
                     }
                     IconButton(onClick = vm::logout) {
                         Icon(Icons.Default.Logout, "Logout")

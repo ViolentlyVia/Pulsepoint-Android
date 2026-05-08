@@ -1,14 +1,6 @@
 package com.FMDAP.pulsepoint.data.api
 
 import com.FMDAP.pulsepoint.data.model.*
-import com.FMDAP.pulsepoint.data.model.UnraidSnapshot
-import com.FMDAP.pulsepoint.data.model.IdracSnapshot
-import com.FMDAP.pulsepoint.data.model.OmadaSnapshot
-import com.FMDAP.pulsepoint.data.model.OmadaSettings
-import com.FMDAP.pulsepoint.data.model.IntegrationsResponse
-import com.FMDAP.pulsepoint.data.model.UpdateUnraidRequest
-import com.FMDAP.pulsepoint.data.model.UpdateIdracRequest
-import com.FMDAP.pulsepoint.data.model.UpdateOmadaRequest
 import retrofit2.http.*
 
 interface PulsePointApi {
@@ -129,4 +121,35 @@ interface PulsePointApi {
 
     @PUT("api/manage/integrations/omada")
     suspend fun updateOmada(@Body body: UpdateOmadaRequest): OkResponse
+
+    @GET("api/manage/integrations/grow")
+    suspend fun getGrowSettings(): GrowSettings
+
+    @PUT("api/manage/integrations/grow")
+    suspend fun updateGrow(@Body body: UpdateGrowRequest): OkResponse
+
+    @GET("api/manage/appearance")
+    suspend fun getAppearance(): AppearanceSettings
+
+    @PUT("api/manage/appearance")
+    suspend fun updateAppearance(@Body body: UpdateAppearanceRequest): OkResponse
+
+    // --- Grow integration routes (require X-Api-Key) ---
+
+    @GET("api/grow/status")
+    suspend fun getGrowStatus(): GrowStatusResponse
+
+    @FormUrlEncoded
+    @POST("api/grow/pump")
+    suspend fun controlGrowPump(@Field("action") action: String): OkResponse
+
+    @FormUrlEncoded
+    @POST("api/grow/set")
+    suspend fun setGrow(
+        @Field("threshold") threshold: Int,
+        @Field("pump_dur") pumpDur: Int
+    ): OkResponse
+
+    @HTTP(method = "POST", path = "api/grow/history/clear", hasBody = false)
+    suspend fun clearGrowHistory(): OkResponse
 }
