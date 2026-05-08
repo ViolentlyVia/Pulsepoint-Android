@@ -1,5 +1,8 @@
 import java.util.Properties
 
+// Redirect build output outside OneDrive to prevent sync conflicts with incremental build state
+layout.buildDirectory.set(File("C:/GradleBuild/PulsePoint/app"))
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

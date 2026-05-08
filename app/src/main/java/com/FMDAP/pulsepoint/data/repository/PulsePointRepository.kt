@@ -116,4 +116,6 @@ class PulsePointRepository(private val prefs: AppPreferences) {
     suspend fun controlGrowPump(action: String) = requireConfig().mapCatching { it.api.controlGrowPump(action) }
     suspend fun setGrow(threshold: Int, pumpDur: Int) = requireConfig().mapCatching { it.api.setGrow(threshold, pumpDur) }
     suspend fun clearGrowHistory() = requireConfig().mapCatching { it.api.clearGrowHistory() }
+    suspend fun getGrowRelayStream() = requireConfig().mapCatching { it.api.getGrowRelayStream() }
+    suspend fun getApiKey() = prefs.apiKey.first()
 }

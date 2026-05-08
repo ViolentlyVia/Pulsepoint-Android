@@ -152,4 +152,7 @@ interface PulsePointApi {
 
     @HTTP(method = "POST", path = "api/grow/history/clear", hasBody = false)
     suspend fun clearGrowHistory(): OkResponse
+
+    @GET("api/grow/relay/stream")
+    suspend fun getGrowRelayStream(): GrowRelayStream
 }

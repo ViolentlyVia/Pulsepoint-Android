@@ -27,14 +27,14 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.FMDAP.pulsepoint.data.model.GrowData
-import com.FMDAP.pulsepoint.data.model.GrowSettings
 import com.FMDAP.pulsepoint.viewmodel.GrowViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GrowScreen(onBack: () -> Unit, vm: GrowViewModel = viewModel()) {
-    val state    by vm.statusState.collectAsState()
-    val settings by vm.settings.collectAsState()
+    val state      by vm.statusState.collectAsState()
+    val cameraUrl  by vm.cameraUrl.collectAsState()
+    val rtspUrl    by vm.rtspUrl.collectAsState()
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf("Monitor", "History", "Camera")
 
@@ -153,7 +153,7 @@ fun GrowScreen(onBack: () -> Unit, vm: GrowViewModel = viewModel()) {
                                 when (selectedTab) {
                                     0 -> MonitorTab(data, vm)
                                     1 -> HistoryTab(data)
-                                    2 -> CameraTab(settings, vm.settingsLoadAttempted)
+                                    2 -> CameraTab(cameraUrl, rtspUrl, vm.streamLoadAttempted)
                                 }
                             }
                         }
@@ -429,55 +429,49 @@ private fun GrowLineChart(data: List<Float>, lineColor: Color, modifier: Modifie
 }
 
 @Composable
-private fun CameraTab(settings: GrowSettings?, settingsLoadAttempted: Boolean) {
-    val hlsUrl  = settings?.hlsUrl?.takeIf  { it.isNotBlank() }
-    val rtspUrl = settings?.rtspUrl?.takeIf { it.isNotBlank() }
-
+private fun CameraTab(cameraUrl: String?, rtspUrl: String?, streamLoadAttempted: Boolean) {
     Box(Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
         when {
-            !settingsLoadAttempted -> {
+            !streamLoadAttempted -> {
                 CircularProgressIndicator()
             }
-            settings == null -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(24.dp)) {
-                    Icon(Icons.Default.Videocam, null, modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("Camera requires management login",
-                        style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        "Go to Settings → Manage, log in, then configure the Grow stream URL under Integration Settings. Come back here and pull to refresh.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            hlsUrl != null -> {
-                HlsPlayerView(hlsUrl = hlsUrl,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f))
+            cameraUrl != null -> {
+                HlsPlayerView(
+                    hlsUrl = cameraUrl,
+                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+                )
             }
             rtspUrl != null -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(24.dp)) {
+                    modifier = Modifier.padding(24.dp)
+                ) {
                     Icon(Icons.Default.Videocam, null, modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.primary)
                     Text("RTSP Stream", style = MaterialTheme.typography.titleMedium)
                     Text(rtspUrl, style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("Configure an HLS URL in Integration Settings to enable in-app playback.",
+                    Text(
+                        "An HLS proxy URL could not be determined. Configure an HLS URL in Manage → Integration Settings.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
             else -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Icon(Icons.Default.VideocamOff, null, modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("No stream URL configured",
-                        style = MaterialTheme.typography.titleMedium)
+                    Text("No stream configured", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Configure the Grow device URL in Manage → Integration Settings.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }

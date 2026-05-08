@@ -16,10 +16,15 @@ class GrowViewModel(app: Application) : AndroidViewModel(app) {
     private val _statusState = MutableStateFlow(UiState<GrowStatusResponse>(isLoading = false))
     val statusState = _statusState.asStateFlow()
 
-    private val _settings = MutableStateFlow<GrowSettings?>(null)
-    val settings = _settings.asStateFlow()
+    // Fully-formed HLS proxy URL with API key appended — ready to feed directly to ExoPlayer
+    private val _cameraUrl = MutableStateFlow<String?>(null)
+    val cameraUrl = _cameraUrl.asStateFlow()
 
-    var settingsLoadAttempted by mutableStateOf(false)
+    // Fallback RTSP URL shown when no HLS proxy is available
+    private val _rtspUrl = MutableStateFlow<String?>(null)
+    val rtspUrl = _rtspUrl.asStateFlow()
+
+    var streamLoadAttempted by mutableStateOf(false)
         private set
 
     var actionError by mutableStateOf<String?>(null)
@@ -39,10 +44,16 @@ class GrowViewModel(app: Application) : AndroidViewModel(app) {
             )
         }
         viewModelScope.launch {
-            repo.getGrowSettings()
-                .onSuccess  { _settings.value = it }
-                .onFailure  { /* 401 = not logged into management */ }
-            settingsLoadAttempted = true
+            repo.getGrowRelayStream().onSuccess { stream ->
+                val key = repo.getApiKey()
+                _cameraUrl.value = stream.hlsProxy?.let { proxy ->
+                    if (key.isNotBlank()) "$proxy?key=$key" else proxy
+                } ?: stream.hls?.let { hls ->
+                    if (key.isNotBlank()) "$hls?key=$key" else hls
+                }
+                _rtspUrl.value = stream.rtsp
+            }
+            streamLoadAttempted = true
         }
     }
 

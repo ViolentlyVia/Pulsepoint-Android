@@ -40,6 +40,12 @@ data class UpdateGrowRequest(
     val hlsUrl: String
 )
 
+data class GrowRelayStream(
+    val rtsp: String?,
+    val hls: String?,
+    @SerializedName("hls_proxy") val hlsProxy: String?
+)
+
 data class AppearanceSettings(
     val accentColor: String = "#7c3aed",
     val siteName: String = "PulsePoint",
