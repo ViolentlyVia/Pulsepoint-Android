@@ -55,7 +55,7 @@ The management console utilizes a separate authentication flow. When a user logs
 
 ## Integrations
 
-PulsePoint supports three optional hardware/network integrations, each with its own API routes, ViewModel, and dedicated screen.
+PulsePoint supports four optional hardware/network integrations, each with its own API routes, ViewModel, and dedicated screen.
 
 ### Unraid
 
@@ -84,9 +84,28 @@ Displays network data from a TP-Link Omada controller via `GET /api/omada`. The 
 
 Multi-site Omada deployments are supported: a site selector in the top bar lets the user switch context, and `PUT /api/omada/preferred-site/{siteId}` persists the preferred site server-side.
 
+### Grow
+
+Displays live sensor data from a self-hosted Grow monitoring device via `GET /api/grow/status`. The screen has three tabs:
+
+- **Monitor**: Soil moisture, temperature, and humidity cards; pump status with start/stop controls; moisture threshold and pump duration settings; history clear button.
+- **History**: Canvas-drawn line chart for moisture, temperature, or humidity over 12 h / 1 d / 1 w ranges, with min/avg/max stats.
+- **Camera**: In-app HLS stream via ExoPlayer (`androidx.media3 1.5.1`). Falls back to showing the RTSP URL if no HLS URL is configured. The Camera tab requires a management session to load stream URLs.
+
 ### Integration Configuration
 
-Integration credentials (Unraid host/API key, iDRAC host/username/password, Omada controller URL/client ID/secret) are managed through the Management Console under **Manage → Integrations**.
+Integration credentials (Unraid host/API key, iDRAC host/username/password, Omada controller URL/client ID/secret, Grow device URL/RTSP URL/HLS URL) are managed through the Management Console under **Manage → Integrations**.
+
+### Dashboard Appearance
+
+`ManageAppearanceScreen` (reached via **Manage → Appearance**) exposes server-side appearance settings:
+
+- Accent color, site name
+- Hidden nav pages (per-integration toggles)
+- Host card column count (`auto` or fixed 2–5)
+- Hidden host card metrics (cpu, memory, disk, ping, uptime)
+- Dashboard refresh interval and online threshold (seconds)
+- Services widget visibility
 
 ## Error Handling
 - **Network Failures**: Caught at the repository level and surfaced to the UI as user-friendly snackbars or error states.
@@ -105,6 +124,7 @@ Integration credentials (Unraid host/API key, iDRAC host/username/password, Omad
 - **Minimum SDK**: 26 (Android 8.0).
 - **Target SDK**: 35 (Android 15).
 - **Signing**: Keystore credentials are read from `local.properties` (never committed). Required keys: `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
+- **Media3**: `androidx.media3:media3-exoplayer`, `media3-exoplayer-hls`, and `media3-ui` at version 1.5.1 — required for HLS video playback on the Grow Camera tab.
 
 ---
 *This documentation is maintained by the PulsePoint Android development team.*
