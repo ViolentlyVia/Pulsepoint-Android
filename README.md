@@ -1,6 +1,6 @@
 # PulsePoint — Android
 
-> **v0.1.0**
+> **v0.2.0**
 
 An Android companion app for a self-hosted [PulsePoint](https://github.com/ViolentlyVia) monitoring server. View the live status of your hosts and services, ping machines, manage assets, and monitor hardware integrations — all from your phone.
 

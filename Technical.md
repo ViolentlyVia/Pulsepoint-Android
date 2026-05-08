@@ -118,7 +118,7 @@ Integration credentials (Unraid host/API key, iDRAC host/username/password, Omad
 
 ## Build Requirements
 
-- **Version**: 0.1.0 (versionCode 3)
+- **Version**: 0.2.0 (versionCode 4)
 - **Kotlin**: 1.9.0+
 - **Compose Compiler**: Compatible with the chosen Kotlin version.
 - **Minimum SDK**: 26 (Android 8.0).
